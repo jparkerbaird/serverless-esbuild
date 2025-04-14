@@ -106,11 +106,14 @@ export async function bundle(this: EsbuildServerlessPlugin): Promise<void> {
     type WithContext = typeof pkg & { context?: ContextFn };
     const context = await (pkg as WithContext).context?.(options);
 
-    let result = await context?.rebuild();
-
-    if (!result) {
-      result = await pkg.build(options);
-    }
+    // It always attempting this is causing memory issues.
+    // Commenting out so it goes straight to build.
+    // Might try to readd the flag that was removed instead.
+    // let result = await context?.rebuild();
+    // if (!result) {
+    //   result = await pkg.build(options);
+    // }
+    let result = await pkg.build(options);
 
     if (config.metafile) {
       fs.writeFileSync(
